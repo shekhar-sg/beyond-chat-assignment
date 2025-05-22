@@ -7,10 +7,15 @@ import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { Divider } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import Typography from "@mui/material/Typography";
 
 export interface User {
   id: string;
   name: string;
+  avatarUrl?: string;
+  lastMessage?: string;
 }
 
 interface UserListProps {
@@ -34,7 +39,7 @@ const UserList = (props: UserListProps) => {
       >
         <Toolbar variant={"dense"}>Your Inbox</Toolbar>
       </AppBar>
-      <Divider/>
+      <Divider />
       <List
         sx={{
           width: 360,
@@ -43,12 +48,35 @@ const UserList = (props: UserListProps) => {
         }}
       >
         {users.map((user) => (
-          <ListItem key={user.id} disablePadding>
+          <ListItem key={user.id} disablePadding alignItems="flex-start">
             <ListItemButton
               selected={selectedUserId === user.id}
               onClick={() => onSelectUser(user.id)}
+              alignItems="flex-start"
             >
-              <ListItemText primary={user.name} />
+              <ListItemAvatar>
+                <Avatar src={user.avatarUrl} alt={user.name} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={user.name}
+                secondary={
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    noWrap
+                    sx={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      maxWidth: 220,
+                    }}
+                  >
+                    {user.lastMessage || ""}
+                  </Typography>
+                }
+              />
             </ListItemButton>
           </ListItem>
         ))}
