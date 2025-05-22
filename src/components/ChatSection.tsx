@@ -43,8 +43,8 @@ export default function ChatSection() {
       <Divider orientation={"vertical"} />
       {/* Chat Section */}
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
-        {/*<Navbar open={open} handleDrawerOpen={handleDrawerOpen} />*/}
         <ChatToolbar
+          userName={selectedUser?.name}
           open={open}
           handleDrawerOpen={handleDrawerOpen}
           variant={"elevation"}
@@ -59,10 +59,6 @@ export default function ChatSection() {
         <Main open={open}>
           {selectedUser ? (
             <>
-              <Typography variant="h6" sx={{ mb: 2 }}>
-                Chat with {selectedUser.name}
-              </Typography>
-              {/* Replace below with actual chat messages for selectedUser */}
               <Typography sx={{ marginBottom: 2 }}>
                 This is the chat area for {selectedUser.name}.
               </Typography>

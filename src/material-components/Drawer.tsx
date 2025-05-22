@@ -1,13 +1,12 @@
 import { type SyntheticEvent, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useTheme } from "@mui/material/styles";
 import DrawerHeader from "./DrawerHeader";
 import Box from "@mui/material/Box";
 import DrawerTabPanel from "@/components/DrawerTabPanel";
 import { Divider } from "@mui/material";
+import { AutoFixOff } from "@mui/icons-material";
 
 const drawerWidth = 440;
 
@@ -37,12 +36,18 @@ const DrawerComponent = (props: DrawerComponentProps) => {
       open={open}
     >
       <DrawerHeader tab={tab} onTabChange={handleTabChange}>
-        <IconButton onClick={handleDrawerClose} sx={{ marginLeft: 1 }}>
-          {theme.direction === "rtl" ? (
-            <ChevronLeftIcon />
-          ) : (
-            <ChevronRightIcon />
-          )}
+        <IconButton
+          color={"inherit"}
+          aria-label={"close drawer"}
+          edge={"end"}
+          onClick={handleDrawerClose}
+          sx={{
+            bgcolor: "grey.200",
+            padding: 0.8,
+          }}
+          size={"small"}
+        >
+          <AutoFixOff fontSize={"small"} />
         </IconButton>
       </DrawerHeader>
       <Divider />
@@ -60,5 +65,3 @@ const DrawerComponent = (props: DrawerComponentProps) => {
   );
 };
 export default DrawerComponent;
-
-
