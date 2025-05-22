@@ -1,7 +1,6 @@
 import { type SyntheticEvent, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import { useTheme } from "@mui/material/styles";
 import DrawerHeader from "./DrawerHeader";
 import Box from "@mui/material/Box";
 import DrawerTabPanel from "@/components/DrawerTabPanel";
@@ -17,7 +16,6 @@ interface DrawerComponentProps {
 
 const DrawerComponent = (props: DrawerComponentProps) => {
   const { open, handleDrawerClose } = props;
-  const theme = useTheme();
   const [tab, setTab] = useState(0);
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
     setTab(newValue);
