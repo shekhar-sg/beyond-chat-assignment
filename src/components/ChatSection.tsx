@@ -1,21 +1,31 @@
 "use client";
-import { useState,KeyboardEvent } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Main from "@/material-components/Main";
 import ChatToolbar from "@/components/chat-toolbar";
 import UserList, { User } from "@/components/UserList";
 import DrawerComponent from "@/material-components/Drawer";
-import { Button, Divider, Stack } from "@mui/material";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
+import Main from "@/material-components/Main";
 import {
   Bolt,
   Bookmarks,
+  Chat,
+  ExpandMore,
   ExpandMoreRounded,
   InsertEmoticonRounded,
 } from "@mui/icons-material";
-import SplitButton from "@/components/SplitButton";
+import {
+  Button,
+  Chip,
+  Divider,
+  Menu,
+  MenuItem,
+  Stack,
+  Tooltip,
+  Zoom,
+} from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { KeyboardEvent, useState } from "react";
 
 export default function ChatSection() {
   const [open, setOpen] = useState(false);
@@ -55,6 +65,15 @@ export default function ChatSection() {
   };
 
   const selectedUser = users.find((u) => u.id === selectedUserId);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
@@ -99,19 +118,45 @@ export default function ChatSection() {
                 overflow={"hidden"}
                 p={2}
               >
+                <Chip
+                  label={
+                    <Box
+                      display={"flex"}
+                      alignItems={"center"}
+                      gap={0.5}
+                      fontWeight={"bold"}
+                    >
+                      <Chat fontSize={"small"} color={"inherit"} />
+                      Chat <ExpandMore />
+                    </Box>
+                  }
+                  clickable
+                  sx={{
+                    width: "fit-content",
+                    bgcolor: "transparent",
+                  }}
+                />
                 <TextField
                   fullWidth
-                  size="medium"
+                  multiline
+                  maxRows={12}
+                  size={"small"}
                   placeholder="Type a message..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={handleInputKeyDown}
-                  variant="standard"
+                  variant={"standard"}
+                  sx={{
+                    padding: 1,
+                  }}
                   slotProps={{
                     input: {
                       sx: {
                         "&:before": {
-                          border: "none",
+                          display: "none",
+                        },
+                        "&:after": {
+                          display: "none",
                         },
                       },
                     },
@@ -125,9 +170,17 @@ export default function ChatSection() {
                       gap: 0.5,
                     }}
                   >
-                    <IconButton color={"inherit"}>
-                      <Bolt />
-                    </IconButton>
+                    <Tooltip
+                      title={"instant reply"}
+                      arrow
+                      slots={{
+                        transition: Zoom,
+                      }}
+                    >
+                      <IconButton color={"inherit"}>
+                        <Bolt />
+                      </IconButton>
+                    </Tooltip>
                     <Divider
                       variant={"middle"}
                       orientation={"vertical"}
@@ -136,22 +189,37 @@ export default function ChatSection() {
                         borderColor: "black",
                       }}
                     />
-                    <IconButton color={"inherit"}>
-                      <Bookmarks />
-                    </IconButton>
-                    <IconButton
-                      sx={{
-                        color: "black",
+                    <Tooltip
+                      title={"bookmarks"}
+                      arrow
+                      slots={{
+                        transition: Zoom,
                       }}
                     >
-                      <InsertEmoticonRounded />
-                    </IconButton>
+                      <IconButton color={"inherit"}>
+                        <Bookmarks />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      title={"emojis"}
+                      arrow
+                      slots={{
+                        transition: Zoom,
+                      }}
+                    >
+                      <IconButton
+                        sx={{
+                          color: "black",
+                        }}
+                      >
+                        <InsertEmoticonRounded />
+                      </IconButton>
+                    </Tooltip>
                   </Box>
                   <Box
                     sx={{
                       display: "flex",
                       alignItems: "center",
-                      // gap: 1,
                       bgcolor: "black",
                       borderRadius: 2,
                       color: "white",
@@ -163,7 +231,6 @@ export default function ChatSection() {
                       sx={{
                         fontWeight: 600,
                       }}
-                      // disabled={!message.trim()}
                     >
                       Send
                     </Button>
@@ -173,9 +240,31 @@ export default function ChatSection() {
                       orientation={"vertical"}
                       flexItem
                     />
-                    <IconButton color={"inherit"}>
+                    <IconButton
+                      color={"inherit"}
+                      id={"basic-button"}
+                      aria-controls={open ? "basic-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClick}
+                    >
                       <ExpandMoreRounded fontSize={"small"} />
                     </IconButton>
+                    <Menu
+                      id="basic-menu"
+                      anchorEl={anchorEl}
+                      open={openMenu}
+                      onClose={handleClose}
+                      transformOrigin={{
+                        horizontal: "center",
+                        vertical: "bottom",
+                      }}
+                      anchorOrigin={{ horizontal: "left", vertical: "top" }}
+                    >
+                      <MenuItem onClick={handleClose}>Profile</MenuItem>
+                      <MenuItem onClick={handleClose}>My account</MenuItem>
+                      <MenuItem onClick={handleClose}>Logout</MenuItem>
+                    </Menu>
                   </Box>
                 </Stack>
               </Stack>

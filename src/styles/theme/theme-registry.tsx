@@ -1,9 +1,10 @@
 "use client";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { useAppSelector } from "@/store/hooks";
+import generateTheme from "@/styles/theme";
 import { ThemeProvider } from "@mui/material";
-import materialTheme from "@/styles/theme/index";
-import type { ReactNode } from "react";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
+import { type ReactNode, useMemo } from "react";
 
 interface ThemeRegistryProps {
   children: ReactNode;
@@ -11,9 +12,13 @@ interface ThemeRegistryProps {
 
 const ThemeRegistry = (props: ThemeRegistryProps) => {
   const { children } = props;
+  const mode = useAppSelector((state) => state.appConfig.themeMode);
+
+  const theme = useMemo(() => generateTheme(mode), [mode]);
+
   return (
     <AppRouterCacheProvider>
-      <ThemeProvider theme={materialTheme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
