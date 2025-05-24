@@ -333,8 +333,8 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
                             ml={0.5}
                             px={0.7}
                             minWidth={18}
-                            bgcolor="primary.main"
-                            color="primary.contrastText"
+                            bgcolor="secondary.main"
+                            color="secondary.contrastText"
                             borderRadius={8}
                             display="flex"
                             alignItems="center"

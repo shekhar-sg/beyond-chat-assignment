@@ -8,7 +8,9 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import {
   Box,
   Button,
+  Divider,
   IconButton,
+  InputAdornment,
   Menu,
   MenuItem,
   Popover,
@@ -18,6 +20,7 @@ import {
   Typography,
   Zoom,
 } from "@mui/material";
+import ButtonGroup from "@mui/material/ButtonGroup";
 import EmojiPicker, { type EmojiClickData } from "emoji-picker-react";
 import {
   type ChangeEvent,
@@ -119,18 +122,51 @@ const MessageInput = ({ onSend }: MessageInputProps) => {
             input: {
               disableUnderline: true,
               sx: { p: 0, border: "none", boxShadow: "none" },
+              endAdornment: (
+                <InputAdornment position={"end"}>
+                  <Tooltip
+                    title={"Emojis"}
+                    followCursor
+                    arrow
+                    slots={{ transition: Zoom }}
+                  >
+                    <IconButton
+                      color={"primary"}
+                      onClick={handleEmojiClick}
+                      size={"small"}
+                    >
+                      <InsertEmoticonRounded fontSize={"small"} />
+                    </IconButton>
+                  </Tooltip>
+                  <Popover
+                    open={open}
+                    anchorEl={emojiAnchorEl}
+                    onClose={handleEmojiClose}
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "left",
+                    }}
+                  >
+                    <EmojiPicker onEmojiClick={handleEmojiSelect} />
+                  </Popover>
+                </InputAdornment>
+              ),
             },
           }}
         />
-        <Stack direction="row" alignItems="center" gap={1}>
+        <Stack direction="row" alignItems="center" gap={0.5}>
           <Tooltip
             title={"Attach files"}
             followCursor
             arrow
             slots={{ transition: Zoom }}
           >
-            <IconButton color={"info"} onClick={handleAttachClick}>
-              <AttachFileIcon />
+            <IconButton
+              color={"primary"}
+              onClick={handleAttachClick}
+              size={"small"}
+            >
+              <AttachFileIcon fontSize={"small"} />
             </IconButton>
           </Tooltip>
           <input
@@ -141,76 +177,50 @@ const MessageInput = ({ onSend }: MessageInputProps) => {
             onChange={handleFileChange}
           />
           <Tooltip
-            title={"Emojis"}
-            followCursor
-            arrow
-            slots={{ transition: Zoom }}
-          >
-            <IconButton color={"warning"} onClick={handleEmojiClick}>
-              <InsertEmoticonRounded />
-            </IconButton>
-          </Tooltip>
-          <Popover
-            open={open}
-            anchorEl={emojiAnchorEl}
-            onClose={handleEmojiClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-          >
-            <EmojiPicker onEmojiClick={handleEmojiSelect} />
-          </Popover>
-          <Tooltip
             title={"Bookmarks"}
             followCursor
             arrow
             slots={{ transition: Zoom }}
           >
-            <IconButton color={"success"}>
-              <Bookmarks />
+            <IconButton color={"primary"} size={"small"}>
+              <Bookmarks fontSize={"small"} />
             </IconButton>
           </Tooltip>
+          <Divider orientation={"vertical"} flexItem variant={"middle"} />
           <Tooltip
             title={"Instant reply"}
             followCursor
             arrow
             slots={{ transition: Zoom }}
           >
-            <IconButton color={"error"}>
-              <Bolt />
+            <IconButton color={"primary"} size={"small"}>
+              <Bolt fontSize={"small"} />
             </IconButton>
           </Tooltip>
           <Box flex={1} />
-          <Button
-            color={"primary"}
+          <ButtonGroup
             variant="contained"
-            onClick={handleSend}
-            sx={{
-              fontWeight: 600,
-              borderRadius: 2,
-              minWidth: 48,
-              minHeight: 48,
-              boxShadow: 1,
-              textTransform: "none",
-              fontSize: 16,
-            }}
             disabled={!message.trim() && files.length === 0}
+            disableElevation
           >
-            Send
-          </Button>
-          <IconButton
-            color={"inherit"}
-            id={"basic-button"}
-            aria-controls={openMenu ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={openMenu ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <ExpandMoreRounded fontSize={"small"} />
-          </IconButton>
+            <Button onClick={handleSend}>Send</Button>
+            <Button
+              size={"small"}
+              id={"basic-button"}
+              aria-controls={openMenu ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={openMenu ? "true" : undefined}
+              onClick={handleClick}
+              sx={{
+                minWidth: "0px !important",
+                px: 1,
+              }}
+            >
+              <ExpandMoreRounded fontSize={"small"} />
+            </Button>
+          </ButtonGroup>
           <Menu
-            id="basic-menu"
+            id={"basic-menu"}
             anchorEl={anchorEl}
             open={openMenu}
             onClose={handleClose}

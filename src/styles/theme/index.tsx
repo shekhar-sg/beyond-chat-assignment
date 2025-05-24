@@ -7,12 +7,12 @@ const generateTheme = (
   return createTheme({
     palette: {
       mode,
-      primary: {
+      secondary: {
         main: isDarkMode ? "#90caf9" : "#1976d2",
         contrastText: isDarkMode ? "#0d1117" : "#fff",
       },
-      secondary: {
-        main: isDarkMode ? "#f48fb1" : "#9c27b0",
+      primary: {
+        main: isDarkMode ? "#fff" : "#000",
       },
       background: {
         default: isDarkMode ? "#181a20" : "#f4f6fb",

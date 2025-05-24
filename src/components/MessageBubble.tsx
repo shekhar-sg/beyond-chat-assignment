@@ -28,7 +28,7 @@ const MessageBubble = ({ from, message, time, isMe }: MessageBubbleProps) => (
       <Box
         sx={(theme) => {
           const bgcolor = isMe
-            ? theme.palette.primary.main
+            ? theme.palette.secondary.main
             : theme.palette.common.white;
           return {
             bgcolor,
