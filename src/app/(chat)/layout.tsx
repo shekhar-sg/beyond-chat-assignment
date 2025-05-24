@@ -1,15 +1,21 @@
+import UserList from "@/components/UserList";
+import { users } from "@/content/users";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
 import { Box, Divider, Paper } from "@mui/material";
 
-export default function ChatLayout({ children }: { children: React.ReactNode }) {
+export default function ChatLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Box display="flex" height="100vh" width="100vw" overflow="hidden">
       {/* Left: User List */}
       <Paper
         elevation={0}
         sx={{
-          width: 280,
+          width: 360,
           borderRight: 1,
           borderColor: "divider",
           bgcolor: "background.paper",
@@ -19,8 +25,8 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
         }}
         square
       >
-        <Toolbar sx={{ bgcolor: "background.default" }}>Users</Toolbar>
-        {/*<UserList />*/}
+        <Toolbar sx={{ bgcolor: "background.default" }}>Your Inbox</Toolbar>
+        <UserList users={users} />
       </Paper>
       <Divider orientation="vertical" flexItem />
       {/* Center: Chat Section */}

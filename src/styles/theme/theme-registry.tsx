@@ -2,7 +2,7 @@
 import { useAppSelector } from "@/store/hooks";
 import generateTheme from "@/styles/theme";
 import { ThemeProvider } from "@mui/material";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import CssBaseline from "@mui/material/CssBaseline";
 import { type ReactNode, useMemo } from "react";
 
