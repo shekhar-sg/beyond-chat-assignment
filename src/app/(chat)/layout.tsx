@@ -17,7 +17,7 @@ import type { ReactNode } from "react";
 export default function ChatLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isConversationPage = pathname.startsWith("/conversation/");
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("lg"));
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
   return (
     <Stack
       direction={"row"}
@@ -25,7 +25,10 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
       width="100vw"
       overflow="hidden"
       gap={1}
-      p={1}
+      p={{
+        xs: 0,
+        md: 1,
+      }}
       position={"relative"}
     >
       <Paper
@@ -33,7 +36,6 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
         sx={{
           width: {
             xs: "100%",
-            sm: 300,
             md: 400,
           },
           border: 1,
