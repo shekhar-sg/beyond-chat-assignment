@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { type KeyboardEvent, useRef, useState } from "react";
+import { type KeyboardEvent, useRef, useState, useEffect } from "react";
 
 const AICopilotSection = () => {
   const [message, setMessage] = useState("");
@@ -14,6 +14,11 @@ const AICopilotSection = () => {
     { sender: "ai", text: "Hello! How can I assist you today?" },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleSend = () => {
     if (!message.trim()) return;
@@ -79,12 +84,15 @@ const AICopilotSection = () => {
                 py: 1,
                 borderRadius: 2,
                 maxWidth: "70%",
+                wordBreak: "break-word", // Ensures long words break to next line
+                overflowWrap: "break-word", // Fallback for extra-long words
               }}
             >
               <Typography variant="body2">{msg.text}</Typography>
             </Box>
           </Box>
         ))}
+        <div ref={messagesEndRef} />
       </Box>
       <Box sx={{ mt: "auto", pt: 3 }}>
         <TextField

@@ -49,8 +49,9 @@ const MessageBubble = ({ from, message, time, isMe }: MessageBubbleProps) => {
               boxShadow: isMe ? "0 2px 8px 0 #005ff91a" : "0 2px 8px 0 #0001",
               transition: "background 0.2s",
               minWidth: 40,
-              wordBreak: "break-word",
               textAlign: "left",
+              wordBreak: "break-word",
+              overflowWrap: "break-word",
               ...(isOnlyEmoji && {
                 letterSpacing: 2,
                 bgcolor: "transparent",
