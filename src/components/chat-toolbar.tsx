@@ -83,6 +83,7 @@ function ChatToolbar(props: AppBarProps) {
             padding: 0.8,
             color: "background.default",
             fontWeight: "bold",
+            cursor: "pointer",
           }}
           icon={<Inbox fontSize={"small"} color={"inherit"} />}
           label={"Close"}
