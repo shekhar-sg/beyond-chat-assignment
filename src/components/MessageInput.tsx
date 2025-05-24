@@ -91,8 +91,9 @@ const MessageInput = ({ onSend }: MessageInputProps) => {
     <Box
       sx={{
         width: "100%",
-        bgcolor: "#fff",
-        borderTop: "1px solid #e6e8eb",
+        bgcolor: "background.paper",
+        borderTop: "1px solid",
+        borderColor: "divider",
         px: { xs: 1, sm: 3 },
         py: 2,
         position: "sticky",
