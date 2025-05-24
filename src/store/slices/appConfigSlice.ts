@@ -22,8 +22,12 @@ const appConfigSlice = createSlice({
       state.themeMode =
         payload || state.themeMode === "light" ? "dark" : "light";
     },
-    toggleAIChatSidebar(state) {
-      state.isAIChatSidebarOpen = !state.isAIChatSidebarOpen;
+    toggleAIChatSidebar(state, action: PayloadAction<boolean | undefined>) {
+      if (action.payload !== undefined) {
+        state.isAIChatSidebarOpen = action.payload;
+      } else {
+        state.isAIChatSidebarOpen = !state.isAIChatSidebarOpen;
+      }
     },
   },
 });

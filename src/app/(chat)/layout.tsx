@@ -4,6 +4,8 @@ import AISectionTabs from "@/components/AISectionTabs";
 import PaperForAISection from "@/components/PaperForAISection";
 import UserList from "@/components/UserList";
 import { users } from "@/content/users";
+import { useAppDispatch } from "@/store/hooks";
+import { toggleAIChatSidebar } from "@/store/slices/appConfigSlice";
 import {
   Paper,
   Stack,
@@ -12,12 +14,19 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isConversationPage = pathname.startsWith("/conversation/");
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    if (isMobile) {
+      console.log("Mobile view detected, toggling AI chat sidebar.");
+      dispatch(toggleAIChatSidebar());
+    }
+  }, [dispatch, isMobile]);
   return (
     <Stack
       direction={"row"}
