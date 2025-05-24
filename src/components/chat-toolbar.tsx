@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { toggleThemeMode } from "@/store/slices/appConfigSlice";
+import { sxToArray } from "@/utils/helpers";
 import { AutoFixHigh, Inbox, MoreHoriz } from "@mui/icons-material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import { Chip } from "@mui/material";
@@ -45,10 +46,16 @@ function ChatToolbar(props: AppBarProps) {
   return (
     <AppBar
       isAIChatSidebarOpen={isAIChatSidebarOpen}
-      variant={"elevation"}
       position={"sticky"}
       color={"default"}
+      elevation={0}
       {...rest}
+      sx={[
+        {
+          bgcolor: "transparent",
+        },
+        ...sxToArray(rest.sx),
+      ]}
     >
       <Toolbar sx={{ gap: 1.5 }}>
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
@@ -88,7 +95,8 @@ function ChatToolbar(props: AppBarProps) {
             // onClick={handleDrawerOpen}
             size={"small"}
             sx={{
-              backgroundImage: "linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%)",
+              backgroundImage:
+                "linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%)",
               color: "common.white",
             }}
           >

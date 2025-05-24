@@ -1,31 +1,31 @@
 "use client";
-import { users as allUsers } from "@/content/users";
-import { useState } from "react";
 import ChatToolbar from "@/components/chat-toolbar";
+import { users as allUsers } from "@/content/users";
 import Main from "@/material-components/Main";
-import DrawerComponent from "@/material-components/Drawer";
+import { useAppSelector } from "@/store/hooks";
 import {
-  Divider,
-  Typography,
+  Bolt,
+  Bookmarks,
+  Chat,
+  ExpandMore,
+  ExpandMoreRounded,
+  InsertEmoticonRounded,
+} from "@mui/icons-material";
+import {
   Box,
-  Stack,
-  Chip,
-  TextField,
   Button,
+  Chip,
+  Divider,
   IconButton,
   Menu,
   MenuItem,
+  Stack,
+  TextField,
   Tooltip,
+  Typography,
   Zoom,
 } from "@mui/material";
-import {
-  Chat,
-  ExpandMore,
-  Bolt,
-  Bookmarks,
-  InsertEmoticonRounded,
-  ExpandMoreRounded,
-} from "@mui/icons-material";
+import { useState } from "react";
 
 interface ConversationProps {
   userID: string;
@@ -33,13 +33,15 @@ interface ConversationProps {
 
 const Conversation = ({ userID }: ConversationProps) => {
   const selectedUser = allUsers.find((u) => u.id === userID)!;
-  const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState(
     selectedUser.conversation ? [...selectedUser.conversation] : []
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorEl);
+  const isAIChatSidebarOpen = useAppSelector(
+    ({ appConfig }) => appConfig.isAIChatSidebarOpen
+  );
 
   const handleSendMessage = () => {
     if (!message.trim()) return;
@@ -63,16 +65,10 @@ const Conversation = ({ userID }: ConversationProps) => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <ChatToolbar
-        userName={selectedUser.name}
-        sx={{
-          boxShadow: open ? "none" : "none",
-          bgcolor: "transparent",
-        }}
-      />
+      <ChatToolbar userName={selectedUser.name} />
       <Divider />
       <Main
-        open={open}
+        open={isAIChatSidebarOpen}
         sx={{ display: "flex", flexDirection: "column", flex: 1 }}
       >
         <Box sx={{ flex: 1, overflowY: "auto", mb: 2 }}>
@@ -203,9 +199,9 @@ const Conversation = ({ userID }: ConversationProps) => {
               <IconButton
                 color={"inherit"}
                 id={"basic-button"}
-                aria-controls={open ? "basic-menu" : undefined}
+                aria-controls={isAIChatSidebarOpen ? "basic-menu" : undefined}
                 aria-haspopup="true"
-                aria-expanded={open ? "true" : undefined}
+                aria-expanded={isAIChatSidebarOpen ? "true" : undefined}
                 onClick={handleClick}
               >
                 <ExpandMoreRounded fontSize={"small"} />
