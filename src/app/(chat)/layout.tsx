@@ -14,11 +14,16 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
       overflow="hidden"
       gap={1}
       p={1}
+      position={"relative"}
     >
       <Paper
         variant={"outlined"}
         sx={{
-          width: 360,
+          width: {
+            xs: "100%",
+            sm: 300,
+            md: 400,
+          },
           border: 1,
           borderColor: "divider",
           overflow: "hidden",
@@ -50,13 +55,19 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
       <PaperForAISection
         variant={"outlined"}
         sx={{
-          width: 440,
+          width: {
+            xs: "100%",
+            md: 440,
+          },
           border: 1,
           borderColor: "divider",
           overflowY: "auto",
-          display: "flex",
           flexDirection: "column",
           boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
+          // position: {
+          //   xs: "absolute",
+          //   md: "static",
+          // },
         }}
       >
         <AISectionTabs />
