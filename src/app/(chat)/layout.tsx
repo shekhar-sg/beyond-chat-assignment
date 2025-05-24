@@ -1,8 +1,8 @@
 import UserList from "@/components/UserList";
 import { users } from "@/content/users";
+import { Paper, Stack } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
-import { Box, Divider, Paper } from "@mui/material";
 
 export default function ChatLayout({
   children,
@@ -10,49 +10,67 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Box display="flex" height="100vh" width="100vw" overflow="hidden">
+    <Stack
+      direction={"row"}
+      height="100vh"
+      width="100vw"
+      overflow="hidden"
+      gap={1}
+      p={1}
+    >
       {/* Left: User List */}
       <Paper
-        elevation={0}
+        elevation={2}
         sx={{
           width: 360,
-          borderRight: 1,
+          border: 1,
           borderColor: "divider",
           bgcolor: "background.paper",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
         }}
-        square
+        // square
       >
         <Toolbar sx={{ bgcolor: "background.default" }}>Your Inbox</Toolbar>
         <UserList users={users} />
       </Paper>
-      <Divider orientation="vertical" flexItem />
+      {/*<Divider orientation="vertical" flexItem />*/}
       {/* Center: Chat Section */}
-      <Box flex={1} display="flex" flexDirection="column" minWidth={0}>
+      <Paper
+        elevation={2}
+        sx={{
+          border: 1,
+          borderColor: "divider",
+          bgcolor: "background.paper",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
         {children}
-      </Box>
-      <Divider orientation="vertical" flexItem />
+      </Paper>
+      {/*<Divider orientation="vertical" flexItem />*/}
       {/* Right: AI Chatbot Help */}
       <Paper
-        elevation={0}
+        elevation={2}
         sx={{
           width: 340,
-          borderLeft: 1,
+          border: 1,
           borderColor: "divider",
           bgcolor: "background.paper",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
         }}
-        square
+        // square
       >
         <Toolbar sx={{ bgcolor: "background.default" }}>
           AI Chatbot Help
         </Toolbar>
         {/* Place your AI help/chatbot component here */}
       </Paper>
-    </Box>
+    </Stack>
   );
 }
