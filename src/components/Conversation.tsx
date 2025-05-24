@@ -3,6 +3,7 @@ import ChatToolbar from "@/components/chat-toolbar";
 import { users as allUsers } from "@/content/users";
 import { useAppSelector } from "@/store/hooks";
 import { Box, Divider } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import MessageInput from "./MessageInput";
@@ -34,10 +35,17 @@ const Conversation = ({ userID }: ConversationProps) => {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        bgcolor: "background.default",
+      }}
+    >
       <ChatToolbar userName={selectedUser.name} />
       <Divider />
-      <Main open={isAIChatSidebarOpen}>
+      <Main open={isAIChatSidebarOpen} sx={{ p: 2 }}>
         <MessageList messages={chatMessages} />
         <MessageInput onSend={handleSendMessage} />
       </Main>

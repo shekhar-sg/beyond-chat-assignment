@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemButton,
+  listItemButtonClasses,
   Menu,
   MenuItem,
   ToggleButton,
@@ -160,7 +161,7 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
       <Divider />
       {/* Chat list, flex: 1 for scrollable area */}
       <Box flex={1} minHeight={0} overflow="auto">
-        <List>
+        <List dense>
           {filteredUsers.length === 0 && (
             <Box p={3} textAlign="center" color="text.secondary">
               No chats yet
@@ -169,18 +170,9 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
           {filteredUsers.map((user) => {
             const last = getLastMessage(user);
             const bgcolor = stringToColor(user.name || "Unknown");
+            // const isSelected = params?.u
             return (
-              <ListItem
-                key={user.id}
-                disablePadding
-                alignItems="flex-start"
-                sx={{
-                  bgcolor:
-                    params?.userID === user.id || selectedUserId === user.id
-                      ? "action.selected"
-                      : "inherit",
-                }}
-              >
+              <ListItem key={user.id} alignItems="flex-start">
                 <ListItemButton
                   component={Link}
                   href={`/conversation/${user.id}`}
@@ -189,16 +181,29 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
                   }
                   onClick={() => onSelectUser?.(user.id)}
                   alignItems="flex-start"
-                  sx={{ py: 1, px: 1.5, minHeight: 56 }}
+                  sx={{
+                    py: 1,
+                    px: 1.5,
+                    minHeight: 56,
+                    borderRadius: 1,
+                    [`&.${listItemButtonClasses.selected}`]: {
+                      border: 1,
+                      borderColor: "divider",
+                    },
+                  }}
                 >
                   {avatarView === "avatar" && (
-                    <ListItemAvatar>
+                    <ListItemAvatar
+                      sx={{
+                        mt: 0.5,
+                      }}
+                    >
                       <Avatar
                         src={user.avatarUrl}
                         alt={user.name}
                         sx={{
-                          width: 40,
-                          height: 40,
+                          width: 36,
+                          height: 36,
                           mr: 1,
                           borderRadius: "50%",
                           bgcolor,

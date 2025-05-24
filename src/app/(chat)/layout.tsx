@@ -2,6 +2,7 @@ import UserList from "@/components/UserList";
 import { users } from "@/content/users";
 import { Paper, Stack } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import React from "react";
 
 export default function ChatLayout({
@@ -18,31 +19,30 @@ export default function ChatLayout({
       gap={1}
       p={1}
     >
-      {/* Left: User List */}
       <Paper
-        elevation={2}
+        variant={"outlined"}
         sx={{
           width: 360,
           border: 1,
           borderColor: "divider",
-          bgcolor: "background.paper",
-          overflowY: "auto",
+          overflow: "hidden",
           display: "flex",
           flexDirection: "column",
+          boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
         }}
-        // square
       >
-        <Toolbar sx={{ bgcolor: "background.default" }}>Your Inbox</Toolbar>
+        <Toolbar sx={{ bgcolor: "background.default" }}>
+          <Typography variant="h6" component="div" fontWeight={"bold"}>
+            Your Inbox
+          </Typography>
+        </Toolbar>
         <UserList users={users} />
       </Paper>
-      {/*<Divider orientation="vertical" flexItem />*/}
-      {/* Center: Chat Section */}
       <Paper
-        elevation={2}
+        variant={"outlined"}
         sx={{
           border: 1,
           borderColor: "divider",
-          bgcolor: "background.paper",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
@@ -51,20 +51,17 @@ export default function ChatLayout({
       >
         {children}
       </Paper>
-      {/*<Divider orientation="vertical" flexItem />*/}
-      {/* Right: AI Chatbot Help */}
       <Paper
-        elevation={2}
+        variant={"outlined"}
         sx={{
           width: 340,
           border: 1,
           borderColor: "divider",
-          bgcolor: "background.paper",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
+          boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
         }}
-        // square
       >
         <Toolbar sx={{ bgcolor: "background.default" }}>
           AI Chatbot Help

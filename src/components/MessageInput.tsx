@@ -92,14 +92,13 @@ const MessageInput = ({ onSend }: MessageInputProps) => {
       sx={{
         width: "100%",
         bgcolor: "background.paper",
-        borderTop: "1px solid",
+        border: 1,
         borderColor: "divider",
         px: { xs: 1, sm: 3 },
         py: 2,
         position: "sticky",
         bottom: 0,
-        zIndex: 2,
-        boxShadow: "0 -2px 8px 0 #0001",
+        borderRadius: 1,
       }}
     >
       <Stack direction="column" gap={1}>
