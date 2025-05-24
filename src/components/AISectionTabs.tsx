@@ -92,8 +92,11 @@ const AISectionTabs = () => {
 export default AISectionTabs;
 
 const tabPanelSx: SxProps<Theme> = (theme) => ({
-  height: `calc(100vh - ${theme.spacing(10)})`,
-  overflow:"hidden"
+  height: {
+    xs: `calc(100% - ${theme.spacing(8)})`,
+    md: `calc(100% - ${theme.spacing(10)})`,
+  },
+  overflow: "hidden",
 });
 
 const CopilotGradientText = () => {

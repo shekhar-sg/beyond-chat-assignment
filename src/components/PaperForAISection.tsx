@@ -15,7 +15,7 @@ const PaperForAISection = (props: PaperProps) => {
       <Drawer
         variant="temporary"
         open={isAIChatSidebarOpen}
-        onClose={() => toggleAIChatSidebar()}
+        onClose={() => toggleAIChatSidebar(false)}
         anchor={"right"}
         sx={{
           display: { xs: "block", lg: "none" },

@@ -120,7 +120,10 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
     <Box
       display="flex"
       flexDirection="column"
-      height={(theme) => `calc(100vh - ${theme.spacing(10)})`}
+      height={(theme) => ({
+        xs: `calc(100% - ${theme.spacing(8)})`,
+        md: `calc(100% - ${theme.spacing(10)})`,
+      })}
     >
       {/* Search and sort */}
       <Box display="flex" alignItems="center" px={2} py={1.5} gap={1}>

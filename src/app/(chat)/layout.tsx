@@ -19,18 +19,19 @@ import { type ReactNode, useEffect } from "react";
 export default function ChatLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isConversationPage = pathname.startsWith("/conversation/");
-  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const isBelowMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
+  const isBelowLg = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (isMobile) {
+    if (isBelowLg) {
       console.log("Mobile view detected, toggling AI chat sidebar.");
-      dispatch(toggleAIChatSidebar());
+      dispatch(toggleAIChatSidebar(false));
     }
-  }, [dispatch, isMobile]);
+  }, [dispatch, isBelowLg]);
   return (
     <Stack
       direction={"row"}
-      height="100vh"
+      height="100svh"
       width="100vw"
       overflow="hidden"
       gap={1}
@@ -51,9 +52,9 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
           borderColor: "divider",
           overflow: "hidden",
           display:
-            isMobile && !isConversationPage
+            isBelowMd && !isConversationPage
               ? "flex"
-              : !isMobile
+              : !isBelowMd
                 ? "flex"
                 : "none",
           flexDirection: "column",
@@ -73,7 +74,7 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
           border: 1,
           borderColor: "divider",
           overflowY: "auto",
-          display: isMobile && !isConversationPage ? "none" : "flex",
+          display: isBelowMd && !isConversationPage ? "none" : "flex",
           flexDirection: "column",
           flex: 1,
         }}

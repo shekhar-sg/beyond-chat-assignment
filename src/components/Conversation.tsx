@@ -43,7 +43,10 @@ const Conversation = ({ userID }: ConversationProps) => {
         flexGrow={1}
         p={2}
         sx={{
-          height: (theme) => `calc(100vh - ${theme.spacing(10)})`,
+          height: (theme) => ({
+            xs: `calc(100% - ${theme.spacing(8)})`,
+            md: `calc(100vh - ${theme.spacing(10)})`,
+          }),
           overflow: "hidden",
         }}
       >
