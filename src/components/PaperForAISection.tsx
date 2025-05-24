@@ -36,7 +36,6 @@ const PaperForAISection = (props: PaperProps) => {
         sx={[
           {
             display: { xs: "none", lg: "flex" },
-            // display: "none",
           },
           (theme) =>
             isAIChatSidebarOpen

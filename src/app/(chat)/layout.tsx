@@ -1,11 +1,23 @@
+"use client";
+
 import AISectionTabs from "@/components/AISectionTabs";
 import PaperForAISection from "@/components/PaperForAISection";
 import UserList from "@/components/UserList";
 import { users } from "@/content/users";
-import { Paper, Stack, Toolbar, Typography } from "@mui/material";
+import {
+  Paper,
+  Stack,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isConversationPage = pathname.startsWith("/conversation/");
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down("lg"));
   return (
     <Stack
       direction={"row"}
@@ -27,7 +39,12 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
           border: 1,
           borderColor: "divider",
           overflow: "hidden",
-          display: "flex",
+          display:
+            isMobile && !isConversationPage
+              ? "flex"
+              : !isMobile
+                ? "flex"
+                : "none",
           flexDirection: "column",
           boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
         }}
@@ -45,7 +62,7 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
           border: 1,
           borderColor: "divider",
           overflowY: "auto",
-          display: "flex",
+          display: isMobile && !isConversationPage ? "none" : "flex",
           flexDirection: "column",
           flex: 1,
         }}
@@ -64,10 +81,6 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
           overflowY: "auto",
           flexDirection: "column",
           boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
-          // position: {
-          //   xs: "absolute",
-          //   md: "static",
-          // },
         }}
       >
         <AISectionTabs />
