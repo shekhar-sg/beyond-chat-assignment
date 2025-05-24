@@ -3,6 +3,7 @@ import {
   toggleAIChatSidebar,
   toggleThemeMode,
 } from "@/store/slices/appConfigSlice";
+import { gradientForAI } from "@/styles/theme";
 import { sxToArray } from "@/utils/helpers";
 import {
   AutoFixHigh,
@@ -12,11 +13,11 @@ import {
 } from "@mui/icons-material";
 import {
   AppBar,
+  type AppBarProps,
   Chip,
   IconButton,
   Toolbar,
   Typography,
-  type AppBarProps,
 } from "@mui/material";
 
 import Link from "next/link";
@@ -67,9 +68,9 @@ function ChatToolbar(props: ChatToolbarProps) {
           href={"/"}
           disabled={!userName}
           sx={{
-            bgcolor: "text.primary",
+            bgcolor: "primary.main",
             padding: 0.8,
-            color: "background.default",
+            color: "primary.contrastText",
             fontWeight: "bold",
             cursor: "pointer",
           }}
@@ -80,12 +81,11 @@ function ChatToolbar(props: ChatToolbarProps) {
         {/* Ai copilot Button */}
         {!isAIChatSidebarOpen && (
           <IconButton
-            aria-label="open drawer"
+            aria-label="open AI drawer"
             onClick={() => dispatch(toggleAIChatSidebar())}
             size={"small"}
             sx={{
-              backgroundImage:
-                "linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%)",
+              backgroundImage: gradientForAI,
               color: "common.white",
             }}
           >

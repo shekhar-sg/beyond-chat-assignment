@@ -7,7 +7,7 @@ export interface AppConfigState {
 
 const initialState: AppConfigState = {
   themeMode: "light",
-  isAIChatSidebarOpen: false,
+  isAIChatSidebarOpen: true,
 };
 
 const appConfigSlice = createSlice({
@@ -28,5 +28,5 @@ const appConfigSlice = createSlice({
   },
 });
 
-export const { toggleThemeMode,toggleAIChatSidebar } = appConfigSlice.actions;
+export const { toggleThemeMode, toggleAIChatSidebar } = appConfigSlice.actions;
 export default appConfigSlice;

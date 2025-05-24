@@ -7,12 +7,13 @@ const generateTheme = (
   return createTheme({
     palette: {
       mode,
+      primary: {
+        main: isDarkMode ? "#fff" : "#000",
+        contrastText: isDarkMode ? "#181a20" : "#f4f6fb",
+      },
       secondary: {
         main: isDarkMode ? "#90caf9" : "#1976d2",
         contrastText: isDarkMode ? "#0d1117" : "#fff",
-      },
-      primary: {
-        main: isDarkMode ? "#fff" : "#000",
       },
       background: {
         default: isDarkMode ? "#181a20" : "#f4f6fb",
@@ -35,11 +36,11 @@ const generateTheme = (
       info: {
         main: isDarkMode ? "#29b6f6" : "#0288d1",
       },
-      common:{
+      common: {
         black: isDarkMode ? "#0d1117" : "#000",
         white: isDarkMode ? "#e3e3e3" : "#fff",
       },
-      grey:{
+      grey: {
         50: isDarkMode ? "#1c1f24" : "#fafafa",
         100: isDarkMode ? "#2c2f34" : "#f5f5f5",
         200: isDarkMode ? "#3c3f44" : "#eeeeee",
@@ -67,3 +68,5 @@ const generateTheme = (
 };
 
 export default generateTheme;
+
+export const gradientForAI = 'linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%)'
