@@ -31,7 +31,7 @@ function ChatToolbar(props: ChatToolbarProps) {
   const { userName, ...rest } = props;
   const isAIChatSidebarOpen = useAppSelector(
     ({ appConfig }) => appConfig.isAIChatSidebarOpen
-  ); // Replace with actual state if needed
+  );
   const dispatch = useAppDispatch(); // Replace with actual state if needed
   return (
     <AppBar
@@ -50,7 +50,6 @@ function ChatToolbar(props: ChatToolbarProps) {
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
           {userName}
         </Typography>
-        {/* Theme Toggle Button */}
         <IconButton color="inherit" aria-label="toggle theme" size={"small"}>
           <MoreHoriz fontSize={"small"} />
         </IconButton>
@@ -62,7 +61,6 @@ function ChatToolbar(props: ChatToolbarProps) {
         >
           <Brightness4 fontSize={"small"} />
         </IconButton>
-        {/* Close Chat Button */}
         <Chip
           component={Link}
           href={"/"}
@@ -78,7 +76,6 @@ function ChatToolbar(props: ChatToolbarProps) {
           label={"Close"}
           variant={"filled"}
         />
-        {/* Ai copilot Button */}
         {!isAIChatSidebarOpen && (
           <IconButton
             aria-label="open AI drawer"
