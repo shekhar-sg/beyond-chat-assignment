@@ -1,10 +1,7 @@
 "use client";
-import ChatToolbar from "@/components/chat-toolbar";
+import ChatToolbar from "@/components/ChatToolbar";
 import { users as allUsers } from "@/content/users";
-import { useAppSelector } from "@/store/hooks";
-import { Box, Divider } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import { styled } from "@mui/material/styles";
+import { Box, Divider, Stack } from "@mui/material";
 import { useState } from "react";
 import MessageInput from "./MessageInput";
 import MessageList from "./MessageList";
@@ -17,9 +14,6 @@ const Conversation = ({ userID }: ConversationProps) => {
   const selectedUser = allUsers.find((u) => u.id === userID)!;
   const [chatMessages, setChatMessages] = useState(
     selectedUser.conversation ? [...selectedUser.conversation] : []
-  );
-  const isAIChatSidebarOpen = useAppSelector(
-    ({ appConfig }) => appConfig.isAIChatSidebarOpen
   );
 
   const handleSendMessage = (msg: string) => {
@@ -45,48 +39,12 @@ const Conversation = ({ userID }: ConversationProps) => {
     >
       <ChatToolbar userName={selectedUser.name} />
       <Divider />
-      <Main open={isAIChatSidebarOpen} sx={{ p: 2 }}>
+      <Stack flexGrow={1} p={2}>
         <MessageList messages={chatMessages} />
         <MessageInput onSend={handleSendMessage} />
-      </Main>
+      </Stack>
     </Box>
   );
 };
 
 export default Conversation;
-
-const drawerWidth = 440;
-
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  display: "flex",
-  flexDirection: "column",
-  transition: theme.transitions.create("margin", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  // marginRight: -drawerWidth,
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: drawerWidth,
-  }),
-  position: "relative",
-  variants: [
-    {
-      props: ({ open }) => open,
-      style: {
-        transition: theme.transitions.create("margin", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
-        }),
-        marginRight: 0,
-      },
-    },
-  ],
-}));

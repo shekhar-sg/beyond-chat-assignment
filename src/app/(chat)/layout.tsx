@@ -1,15 +1,21 @@
+"use client";
 import UserList from "@/components/UserList";
 import { users } from "@/content/users";
-import { Paper, Stack } from "@mui/material";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import React from "react";
+import { useAppSelector } from "@/store/hooks";
+import {
+  Paper,
+  type PaperProps,
+  Stack,
+  styled,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import type { ReactNode } from "react";
 
-export default function ChatLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ChatLayout({ children }: { children: ReactNode }) {
+  const isAIChatSidebarOpen = useAppSelector(
+    ({ appConfig }) => appConfig.isAIChatSidebarOpen
+  );
   return (
     <Stack
       direction={"row"}
@@ -38,7 +44,8 @@ export default function ChatLayout({
         </Toolbar>
         <UserList users={users} />
       </Paper>
-      <Paper
+      <PaperForMain
+        isAIChatSidebarOpen={isAIChatSidebarOpen}
         variant={"outlined"}
         sx={{
           border: 1,
@@ -46,28 +53,82 @@ export default function ChatLayout({
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
-          flex: 1,
+          flexGrow: 1,
+          flexShrink: 0,
+          // marginRight: "0", // Adjust for the width of the AI chat drawer and padding
         }}
       >
         {children}
-      </Paper>
-      <Paper
+      </PaperForMain>
+      <PaperForAIChat
+        isAIChatSidebarOpen={isAIChatSidebarOpen}
         variant={"outlined"}
         sx={{
-          width: 340,
+          width: 440,
           border: 1,
           borderColor: "divider",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
           boxShadow: "inset 0 0 8px rgba(0,0,0,0.1)",
+          // marginRight: "-448px",
         }}
       >
         <Toolbar sx={{ bgcolor: "background.default" }}>
           AI Chatbot Help
         </Toolbar>
         {/* Place your AI help/chatbot component here */}
-      </Paper>
+      </PaperForAIChat>
     </Stack>
   );
 }
+
+const drawerWidth = 440;
+
+interface CustomPaperProps extends PaperProps {
+  isAIChatSidebarOpen: boolean;
+}
+
+const PaperForMain = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== "isAIChatSidebarOpen",
+})<CustomPaperProps>(({ theme }) => ({
+  transition: theme.transitions.create(["margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginRight: 0, // Adjust for the width of the AI chat drawer
+  variants: [
+    {
+      props: ({ isAIChatSidebarOpen }) => isAIChatSidebarOpen,
+      style: {
+        transition: theme.transitions.create(["margin"], {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: 0,
+      },
+    },
+  ],
+}));
+
+const PaperForAIChat = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== "isAIChatSidebarOpen",
+})<CustomPaperProps>(({ theme }) => ({
+  transition: theme.transitions.create(["margin"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginRight: -(drawerWidth + 8),
+  variants: [
+    {
+      props: ({ isAIChatSidebarOpen }) => isAIChatSidebarOpen,
+      style: {
+        transition: theme.transitions.create(["margin"], {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginRight: 0,
+      },
+    },
+  ],
+}));

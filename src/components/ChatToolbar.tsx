@@ -1,43 +1,32 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { toggleThemeMode } from "@/store/slices/appConfigSlice";
+import {
+  toggleAIChatSidebar,
+  toggleThemeMode,
+} from "@/store/slices/appConfigSlice";
 import { sxToArray } from "@/utils/helpers";
-import { AutoFixHigh, Inbox, MoreHoriz } from "@mui/icons-material";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import { Chip } from "@mui/material";
-import MuiAppBar, {
-  type AppBarProps as MuiAppBarProps,
-} from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import {
+  AutoFixHigh,
+  Brightness4,
+  Inbox,
+  MoreHoriz,
+} from "@mui/icons-material";
+import {
+  AppBar,
+  Chip,
+  IconButton,
+  Toolbar,
+  Typography,
+  type AppBarProps,
+} from "@mui/material";
+
 import Link from "next/link";
 import React from "react";
 
-interface AppBarProps extends MuiAppBarProps {
+interface ChatToolbarProps extends AppBarProps {
   userName: string;
 }
 
-const drawerWidth = 440;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "isAIChatSidebarOpen",
-})<{ isAIChatSidebarOpen: boolean }>(({ theme, isAIChatSidebarOpen }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(isAIChatSidebarOpen && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginRight: drawerWidth,
-  }),
-}));
-
-function ChatToolbar(props: AppBarProps) {
+function ChatToolbar(props: ChatToolbarProps) {
   const { userName, ...rest } = props;
   const isAIChatSidebarOpen = useAppSelector(
     ({ appConfig }) => appConfig.isAIChatSidebarOpen
@@ -45,7 +34,6 @@ function ChatToolbar(props: AppBarProps) {
   const dispatch = useAppDispatch(); // Replace with actual state if needed
   return (
     <AppBar
-      isAIChatSidebarOpen={isAIChatSidebarOpen}
       position={"sticky"}
       color={"default"}
       elevation={0}
@@ -71,7 +59,7 @@ function ChatToolbar(props: AppBarProps) {
           onClick={() => dispatch(toggleThemeMode())}
           size={"small"}
         >
-          <Brightness4Icon fontSize={"small"} />
+          <Brightness4 fontSize={"small"} />
         </IconButton>
         {/* Close Chat Button */}
         <Chip
@@ -93,7 +81,7 @@ function ChatToolbar(props: AppBarProps) {
         {!isAIChatSidebarOpen && (
           <IconButton
             aria-label="open drawer"
-            // onClick={handleDrawerOpen}
+            onClick={() => dispatch(toggleAIChatSidebar())}
             size={"small"}
             sx={{
               backgroundImage:

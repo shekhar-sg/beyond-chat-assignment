@@ -28,5 +28,5 @@ const appConfigSlice = createSlice({
   },
 });
 
-export const { toggleThemeMode } = appConfigSlice.actions;
+export const { toggleThemeMode,toggleAIChatSidebar } = appConfigSlice.actions;
 export default appConfigSlice;
