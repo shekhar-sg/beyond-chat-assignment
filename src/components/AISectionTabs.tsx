@@ -1,15 +1,16 @@
 "use client";
+import AICopilotSection from "@/components/AICopilotSection";
 import { useAppDispatch } from "@/store/hooks";
 import { toggleAIChatSidebar } from "@/store/slices/appConfigSlice";
 import { gradientForAI } from "@/styles/theme";
 import { AutoFixOff } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { IconButton, Tab, Toolbar } from "@mui/material";
-import Box from "@mui/material/Box";
+import { IconButton, Tab, Toolbar, Box } from "@mui/material";
 import { type SyntheticEvent, useState } from "react";
+import AIDetailsSection from "./AIDetailsSection";
 
 const AISectionTabs = () => {
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useState("2");
   const dispatch = useAppDispatch();
 
   const handleChange = (event: SyntheticEvent, newValue: string) => {
@@ -77,8 +78,17 @@ const AISectionTabs = () => {
           <AutoFixOff fontSize={"small"} />
         </IconButton>
       </Toolbar>
-      <TabPanel value="1">Item One</TabPanel>
-      <TabPanel value="2">Item Two</TabPanel>
+      <TabPanel value="1">
+        <AIDetailsSection />
+      </TabPanel>
+      <TabPanel
+        value="2"
+        sx={{
+          height: "100%",
+        }}
+      >
+        <AICopilotSection />
+      </TabPanel>
     </TabContext>
   );
 };
