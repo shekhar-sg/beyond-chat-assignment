@@ -1,7 +1,5 @@
-"use client";
-
-import ChatSection from "@/components/ChatSection";
-import { use, useEffect } from "react";
+import Conversation from "@/components/Conversation";
+import { use } from "react";
 
 const ConversationPage = (props: {
   params: Promise<{
@@ -10,10 +8,7 @@ const ConversationPage = (props: {
 }) => {
   const params = use(props.params);
 
-  useEffect(() => {
-    console.log("ConversationPage mounted with props:", params.userID);
-  }, [params.userID]);
-  return <ChatSection />;
+  return <Conversation userID={params.userID} />;
 };
 
 export default ConversationPage;

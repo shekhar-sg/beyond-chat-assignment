@@ -1,33 +1,32 @@
-import React from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleThemeMode } from "@/store/slices/appConfigSlice";
+import { AutoFixHigh, Inbox, MoreHoriz } from "@mui/icons-material";
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import { Chip } from "@mui/material";
 import MuiAppBar, {
   type AppBarProps as MuiAppBarProps,
 } from "@mui/material/AppBar";
+import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import { AutoFixHigh, Inbox, MoreHoriz } from "@mui/icons-material";
-import { Button, Chip } from "@mui/material";
+import Link from "next/link";
+import React from "react";
 
 interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
-  userName?: string;
-  onThemeToggle?: () => void;
-  onCloseChat?: () => void;
-  handleDrawerOpen?: () => void;
+  userName: string;
 }
 
 const drawerWidth = 440;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
+  shouldForwardProp: (prop) => prop !== "isAIChatSidebarOpen",
+})<{ isAIChatSidebarOpen: boolean }>(({ theme, isAIChatSidebarOpen }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
+  ...(isAIChatSidebarOpen && {
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
@@ -38,50 +37,44 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 function ChatToolbar(props: AppBarProps) {
-  const {
-    open,
-    handleDrawerOpen,
-    userName,
-    onThemeToggle,
-    onCloseChat,
-    ...rest
-  } = props;
+  const { userName, ...rest } = props;
+  const isAIChatSidebarOpen = useAppSelector(
+    ({ appConfig }) => appConfig.isAIChatSidebarOpen
+  ); // Replace with actual state if needed
+  const dispatch = useAppDispatch(); // Replace with actual state if needed
   return (
-    <AppBar open={open} {...rest}>
-      <Toolbar variant={"dense"} sx={{ gap: 1.5 }}>
+    <AppBar
+      isAIChatSidebarOpen={isAIChatSidebarOpen}
+      variant={"elevation"}
+      position={"sticky"}
+      color={"default"}
+      {...rest}
+    >
+      <Toolbar sx={{ gap: 1.5 }}>
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }} component="div">
-          {userName ? `Chat with ${userName}` : "No User Selected"}
+          {userName}
         </Typography>
         {/* Theme Toggle Button */}
-        <IconButton
-          color="inherit"
-          aria-label="toggle theme"
-          edge="end"
-          onClick={onThemeToggle}
-          sx={{ bgcolor: "grey.200", padding: 0.8 }}
-          size={"small"}
-        >
+        <IconButton color="inherit" aria-label="toggle theme" size={"small"}>
           <MoreHoriz fontSize={"small"} />
         </IconButton>
         <IconButton
           color="inherit"
           aria-label="toggle theme"
-          edge="end"
-          onClick={onThemeToggle}
-          sx={{ bgcolor: "grey.200", padding: 0.8 }}
+          onClick={() => dispatch(toggleThemeMode())}
           size={"small"}
         >
           <Brightness4Icon fontSize={"small"} />
         </IconButton>
         {/* Close Chat Button */}
         <Chip
-          component={Button}
-          onClick={onCloseChat}
+          component={Link}
+          href={"/"}
           disabled={!userName}
           sx={{
-            bgcolor: "black",
+            bgcolor: "text.primary",
             padding: 0.8,
-            color: "white",
+            color: "background.default",
             fontWeight: "bold",
           }}
           icon={<Inbox fontSize={"small"} color={"inherit"} />}
@@ -89,20 +82,19 @@ function ChatToolbar(props: AppBarProps) {
           variant={"filled"}
         />
         {/* Ai copilot Button */}
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="end"
-          onClick={handleDrawerOpen}
-          sx={{
-            bgcolor: "grey.200",
-            padding: 0.8,
-            display: open ? "none" : "flex",
-          }}
-          size={"small"}
-        >
-          <AutoFixHigh fontSize={"small"} />
-        </IconButton>
+        {!isAIChatSidebarOpen && (
+          <IconButton
+            aria-label="open drawer"
+            // onClick={handleDrawerOpen}
+            size={"small"}
+            sx={{
+              backgroundImage: "linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%)",
+              color: "common.white",
+            }}
+          >
+            <AutoFixHigh fontSize={"small"} />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   );

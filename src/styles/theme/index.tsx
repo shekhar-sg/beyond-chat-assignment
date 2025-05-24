@@ -35,6 +35,22 @@ const generateTheme = (
       info: {
         main: isDarkMode ? "#29b6f6" : "#0288d1",
       },
+      common:{
+        black: isDarkMode ? "#0d1117" : "#000",
+        white: isDarkMode ? "#e3e3e3" : "#fff",
+      },
+      grey:{
+        50: isDarkMode ? "#1c1f24" : "#fafafa",
+        100: isDarkMode ? "#2c2f34" : "#f5f5f5",
+        200: isDarkMode ? "#3c3f44" : "#eeeeee",
+        300: isDarkMode ? "#4c4f54" : "#e0e0e0",
+        400: isDarkMode ? "#5c5f64" : "#bdbdbd",
+        500: isDarkMode ? "#6c6f74" : "#9e9e9e",
+        600: isDarkMode ? "#7c7f84" : "#757575",
+        700: isDarkMode ? "#8c8f94" : "#616161",
+        800: isDarkMode ? "#9c9fa4" : "#424242",
+        900: isDarkMode ? "#acafb4" : "#212121",
+      },
     },
     typography: {
       fontFamily: 'Inter, Roboto, "Helvetica Neue", Arial, sans-serif',

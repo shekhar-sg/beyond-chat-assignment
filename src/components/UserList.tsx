@@ -18,23 +18,48 @@ import {
 } from "@mui/material";
 import { type ChangeEvent, type MouseEvent, useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export interface User {
   id: string;
   name: string;
   avatarUrl?: string;
-  lastMessage?: string;
-  lastMessageTime?: string; // ISO string or formatted time
   status?: string; // e.g. 'online', 'offline', 'typing...'
   isGroup?: boolean;
   groupMembers?: string[]; // for group chats
   unreadCount?: number;
+  conversation?: { from: string; message: string; time: string }[]; // optional, for conversation history
 }
 
 interface UserListProps {
   users: User[];
   selectedUserId?: string | null;
   onSelectUser?: (userId: string) => void;
+}
+
+const getLastMessage = (user: User) => {
+  if (user.conversation && user.conversation.length > 0) {
+    const last = user.conversation[user.conversation.length - 1];
+    return { message: last.message, time: last.time };
+  }
+};
+
+function stringToColor(string: string) {
+  let hash = 0;
+  let i;
+
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+
+  return color;
 }
 
 const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
@@ -44,6 +69,7 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
   const [avatarView, setAvatarView] = useState<"avatar" | "no-avatar">(
     "avatar"
   );
+  const params = useParams();
   const open = Boolean(anchorEl);
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) =>
@@ -64,10 +90,12 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
   const filteredUsers = users
     .filter((user) => {
       const searchLower = search.toLowerCase();
+      const last = getLastMessage(user);
       return (
         user.name.toLowerCase().includes(searchLower) ||
-        (user.lastMessage &&
-          user.lastMessage.toLowerCase().includes(searchLower)) ||
+        (last &&
+          last.message &&
+          last.message.toLowerCase().includes(searchLower)) ||
         (user.status && user.status.toLowerCase().includes(searchLower)) ||
         (user.isGroup &&
           user.groupMembers &&
@@ -77,8 +105,10 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
       );
     })
     .sort((a, b) => {
+      const lastA = getLastMessage(a);
+      const lastB = getLastMessage(b);
       if (sortBy === "recent") {
-        return (b.lastMessageTime || "").localeCompare(a.lastMessageTime || "");
+        return (lastB?.time || "").localeCompare(lastA?.time || "");
       } else if (sortBy === "name") {
         return a.name.localeCompare(b.name);
       }
@@ -136,184 +166,193 @@ const UserList = ({ users, selectedUserId, onSelectUser }: UserListProps) => {
               No chats yet
             </Box>
           )}
-          {filteredUsers.map((user) => (
-            <ListItem
-              key={user.id}
-              disablePadding
-              alignItems="flex-start"
-              sx={{
-                bgcolor:
-                  selectedUserId === user.id ? "action.selected" : "inherit",
-              }}
-            >
-              <ListItemButton
-                component={Link}
-                href={`/conversation/${user.id}`}
-                selected={selectedUserId === user.id}
-                onClick={() => onSelectUser?.(user.id)}
+          {filteredUsers.map((user) => {
+            const last = getLastMessage(user);
+            const bgcolor = stringToColor(user.name || "Unknown");
+            return (
+              <ListItem
+                key={user.id}
+                disablePadding
                 alignItems="flex-start"
-                sx={{ py: 1, px: 1.5, minHeight: 56 }}
+                sx={{
+                  bgcolor:
+                    params?.userID === user.id || selectedUserId === user.id
+                      ? "action.selected"
+                      : "inherit",
+                }}
               >
-                {avatarView === "avatar" && (
-                  <ListItemAvatar>
-                    <Avatar
-                      src={user.avatarUrl}
-                      alt={user.name}
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        mr: 1,
-                        borderRadius: "50%",
-                        bgcolor: "grey.200",
-                        color: "text.primary",
-                        fontWeight: 600,
-                        fontSize: 18,
-                      }}
-                    >
-                      {user.isGroup ? (
-                        <Box component="span" fontSize={20}>
-                          👥
-                        </Box>
-                      ) : user.name ? (
-                        user.name[0].toUpperCase()
-                      ) : (
-                        <Box component="span" fontSize={20}>
-                          ?
-                        </Box>
-                      )}
-                    </Avatar>
-                  </ListItemAvatar>
-                )}
-                <Box flex={1} minWidth={0}>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    width="100%"
-                    gap={1}
-                  >
-                    <Box
-                      minWidth={0}
-                      flex={1}
-                      display="flex"
-                      flexDirection="column"
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        fontWeight={600}
-                        noWrap
-                        sx={{ maxWidth: "100%", fontSize: 15, flex: 1 }}
-                      >
-                        {user.name}
-                      </Typography>
-                      {user.isGroup && user.groupMembers && (
-                        <Typography
-                          variant="caption"
-                          color="text.secondary"
-                          noWrap
-                          sx={{
-                            display: "block",
-                            maxWidth: "100%",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            fontSize: 11,
-                            flex: 1,
-                          }}
-                        >
-                          {user.groupMembers.join(", ")}
-                        </Typography>
-                      )}
-                    </Box>
-                    {user.lastMessageTime && (
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
+                <ListItemButton
+                  component={Link}
+                  href={`/conversation/${user.id}`}
+                  selected={
+                    params?.userID === user.id || selectedUserId === user.id
+                  }
+                  onClick={() => onSelectUser?.(user.id)}
+                  alignItems="flex-start"
+                  sx={{ py: 1, px: 1.5, minHeight: 56 }}
+                >
+                  {avatarView === "avatar" && (
+                    <ListItemAvatar>
+                      <Avatar
+                        src={user.avatarUrl}
+                        alt={user.name}
                         sx={{
-                          whiteSpace: "nowrap",
-                          ml: 1,
-                          minWidth: 40,
-                          textAlign: "right",
-                          fontSize: 12,
+                          width: 40,
+                          height: 40,
+                          mr: 1,
+                          borderRadius: "50%",
+                          bgcolor,
+                          color: (theme) =>
+                            theme.palette.getContrastText(bgcolor),
+                          fontWeight: 600,
+                          fontSize: 18,
                         }}
                       >
-                        {user.lastMessageTime}
-                      </Typography>
-                    )}
-                  </Box>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="space-between"
-                    width="100%"
-                    gap={1}
-                    mt={0.2}
-                  >
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      noWrap
-                      sx={{
-                        flex: 1,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 1,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        fontSize: 13,
-                      }}
-                    >
-                      {user.lastMessage || (
-                        <span style={{ color: "#bbb" }}>No messages yet</span>
-                      )}
-                    </Typography>
+                        {user.isGroup ? (
+                          <Box component="span" fontSize={20}>
+                            👥
+                          </Box>
+                        ) : user.name ? (
+                          user.name[0].toUpperCase()
+                        ) : (
+                          <Box component="span" fontSize={20}>
+                            ?
+                          </Box>
+                        )}
+                      </Avatar>
+                    </ListItemAvatar>
+                  )}
+                  <Box flex={1} minWidth={0}>
                     <Box
                       display="flex"
                       alignItems="center"
-                      gap={0.5}
-                      minWidth={0}
+                      justifyContent="space-between"
+                      width="100%"
+                      gap={1}
                     >
-                      {user.status && (
+                      <Box
+                        minWidth={0}
+                        flex={1}
+                        display="flex"
+                        flexDirection="column"
+                      >
+                        <Typography
+                          variant="subtitle2"
+                          fontWeight={600}
+                          noWrap
+                          sx={{ maxWidth: "100%", fontSize: 15, flex: 1 }}
+                        >
+                          {user.name}
+                        </Typography>
+                        {user.isGroup && user.groupMembers && (
+                          <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            noWrap
+                            sx={{
+                              display: "block",
+                              maxWidth: "100%",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              fontSize: 11,
+                              flex: 1,
+                            }}
+                          >
+                            {user.groupMembers.join(", ")}
+                          </Typography>
+                        )}
+                      </Box>
+                      {last?.time && (
                         <Typography
                           variant="caption"
-                          color={
-                            user.status === "online"
-                              ? "success.main"
-                              : "text.disabled"
-                          }
+                          color="text.secondary"
                           sx={{
-                            ml: 0.5,
-                            minWidth: 28,
+                            whiteSpace: "nowrap",
+                            ml: 1,
+                            minWidth: 40,
                             textAlign: "right",
-                            fontSize: 11,
+                            fontSize: 12,
                           }}
                         >
-                          {user.status}
+                          {last.time}
                         </Typography>
                       )}
-                      {user.unreadCount && user.unreadCount > 0 ? (
-                        <Box
-                          ml={0.5}
-                          px={0.7}
-                          minWidth={18}
-                          bgcolor="primary.main"
-                          color="primary.contrastText"
-                          borderRadius={8}
-                          display="flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          fontSize={11}
-                          fontWeight={600}
-                          sx={{ minWidth: 18, textAlign: "center" }}
-                        >
-                          {user.unreadCount}
-                        </Box>
-                      ) : null}
+                    </Box>
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      width="100%"
+                      gap={1}
+                      mt={0.2}
+                    >
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        noWrap
+                        sx={{
+                          flex: 1,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 1,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          fontSize: 13,
+                        }}
+                      >
+                        {last?.message || (
+                          <span style={{ color: "#bbb" }}>No messages yet</span>
+                        )}
+                      </Typography>
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        gap={0.5}
+                        minWidth={0}
+                      >
+                        {user.status && (
+                          <Typography
+                            variant="caption"
+                            color={
+                              user.status === "online"
+                                ? "success.main"
+                                : "text.disabled"
+                            }
+                            sx={{
+                              ml: 0.5,
+                              minWidth: 28,
+                              textAlign: "right",
+                              fontSize: 11,
+                            }}
+                          >
+                            {user.status}
+                          </Typography>
+                        )}
+                        {user.unreadCount && user.unreadCount > 0 ? (
+                          <Box
+                            ml={0.5}
+                            px={0.7}
+                            minWidth={18}
+                            bgcolor="primary.main"
+                            color="primary.contrastText"
+                            borderRadius={8}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            fontSize={11}
+                            fontWeight={600}
+                            sx={{ minWidth: 18, textAlign: "center" }}
+                          >
+                            {user.unreadCount}
+                          </Box>
+                        ) : null}
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              </ListItemButton>
-            </ListItem>
-          ))}
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
         </List>
       </Box>
       {/* Toggle buttons at bottom left */}
