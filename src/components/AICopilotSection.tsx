@@ -10,12 +10,28 @@ import { type KeyboardEvent, useRef, useState } from "react";
 
 const AICopilotSection = () => {
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([
+    { sender: "ai", text: "Hello! How can I assist you today?" },
+  ]);
   const inputRef = useRef<HTMLInputElement>(null);
+
   const handleSend = () => {
-    console.log("handleSend called with -> ", message);
+    if (!message.trim()) return;
+    setMessages((prev) => [
+      ...prev,
+      { sender: "user", text: message },
+      { sender: "ai", text: getAIResponse(message) },
+    ]);
     setMessage("");
     inputRef.current?.focus();
   };
+
+  function getAIResponse(userMsg: string) {
+    if (userMsg.toLowerCase().includes("hello")) return "Hi there!";
+    if (userMsg.toLowerCase().includes("ai")) return "I'm your AI Copilot!";
+    if (userMsg.toLowerCase().includes("help")) return "How can I help you?";
+    return "I'm here to assist you.";
+  }
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -23,6 +39,7 @@ const AICopilotSection = () => {
       handleSend();
     }
   };
+
   return (
     <Box
       sx={{
@@ -41,33 +58,62 @@ const AICopilotSection = () => {
           improve its responses over time.
         </Typography>
       </Box>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Ask a follow-up question..."
-        sx={{ mt: "auto" }}
-        inputRef={inputRef}
-        value={message}
-        onKeyDown={handleInputKeyDown}
-        onChange={(e) => setMessage(e.target.value)}
-        slotProps={{
-          input: {
-            endAdornment: (
-              <InputAdornment position={"end"}>
-                <IconButton
-                  color="primary"
-                  size="small"
-                  onClick={() => {
-                    handleSend();
-                  }}
-                >
-                  <ArrowUpward fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ),
-          },
-        }}
-      />
+      <Box sx={{ flex: 1, overflowY: "auto", px: 2, py: 1 }}>
+        {messages.map((msg, idx) => (
+          <Box
+            key={idx}
+            sx={{
+              display: "flex",
+              justifyContent: msg.sender === "user" ? "flex-end" : "flex-start",
+              mb: 1,
+            }}
+          >
+            <Box
+              sx={{
+                bgcolor: msg.sender === "user" ? "primary.main" : "grey.200",
+                color:
+                  msg.sender === "user"
+                    ? "primary.contrastText"
+                    : "text.primary",
+                px: 2,
+                py: 1,
+                borderRadius: 2,
+                maxWidth: "70%",
+              }}
+            >
+              <Typography variant="body2">{msg.text}</Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+      <Box sx={{ mt: "auto", pt: 3 }}>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Ask a follow-up question..."
+          inputRef={inputRef}
+          value={message}
+          onKeyDown={handleInputKeyDown}
+          onChange={(e) => setMessage(e.target.value)}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position={"end"}>
+                  <IconButton
+                    color="primary"
+                    size="small"
+                    onClick={() => {
+                      handleSend();
+                    }}
+                  >
+                    <ArrowUpward fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 };

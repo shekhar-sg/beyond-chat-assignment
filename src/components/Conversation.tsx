@@ -39,7 +39,14 @@ const Conversation = ({ userID }: ConversationProps) => {
     >
       <ChatToolbar userName={selectedUser.name} />
       <Divider />
-      <Stack flexGrow={1} p={2}>
+      <Stack
+        flexGrow={1}
+        p={2}
+        sx={{
+          height: (theme) => `calc(100vh - ${theme.spacing(10)})`,
+          overflow: "hidden",
+        }}
+      >
         <MessageList messages={chatMessages} />
         <MessageInput onSend={handleSendMessage} />
       </Stack>

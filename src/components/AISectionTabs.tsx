@@ -5,7 +5,8 @@ import { toggleAIChatSidebar } from "@/store/slices/appConfigSlice";
 import { gradientForAI } from "@/styles/theme";
 import { AutoFixOff } from "@mui/icons-material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { IconButton, Tab, Toolbar, Box } from "@mui/material";
+import { IconButton, Tab, Toolbar, Box, type Theme } from "@mui/material";
+import type { SxProps } from "@mui/system";
 import { type SyntheticEvent, useState } from "react";
 import AIDetailsSection from "./AIDetailsSection";
 
@@ -78,15 +79,10 @@ const AISectionTabs = () => {
           <AutoFixOff fontSize={"small"} />
         </IconButton>
       </Toolbar>
-      <TabPanel value="1">
+      <TabPanel value="1" sx={tabPanelSx}>
         <AIDetailsSection />
       </TabPanel>
-      <TabPanel
-        value="2"
-        sx={{
-          height: "100%",
-        }}
-      >
+      <TabPanel value="2" sx={tabPanelSx}>
         <AICopilotSection />
       </TabPanel>
     </TabContext>
@@ -94,6 +90,11 @@ const AISectionTabs = () => {
 };
 
 export default AISectionTabs;
+
+const tabPanelSx: SxProps<Theme> = (theme) => ({
+  height: `calc(100vh - ${theme.spacing(10)})`,
+  overflow:"hidden"
+});
 
 const CopilotGradientText = () => {
   return (
